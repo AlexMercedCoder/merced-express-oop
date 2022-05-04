@@ -1,7 +1,7 @@
 {
   "name": "merced-express-oop",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Applying OOP to Express",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

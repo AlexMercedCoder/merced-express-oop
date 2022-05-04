@@ -5,7 +5,7 @@ import express from "express"
 ////////////////////////////////////
 class Server {
 
-    constructor(configs = {PORT:3000}){
+    constructor(configs = {PORT:3000, host: "localhost"}){
         this.app = express()
         this.configs = configs
     }
@@ -29,8 +29,29 @@ class Server {
         return express.Router()
     }
 
+    cors(urls){
+        if (urls){
+            this.app.use((req, res, next) => {
+                res.set("Access-Control-Allow-Origin", urls.join(","))
+                res.set("Access-Control-Allow-Methods", "*")
+                res.set("Access-Control-Allow-Headers", "*")
+                res.set("Access-Control-Max-Age", 86400)
+                next()
+            })
+        } else {
+            this.app.use((req, res, next) => {
+                res.set("Access-Control-Allow-Origin", "*")
+                res.set("Access-Control-Allow-Methods", "*")
+                res.set("Access-Control-Allow-Headers", "*")
+                res.set("Access-Control-Max-Age", 86400)
+                next()
+            })
+        }
+        return this
+    }
+
     middlware(...args){
-        for (arg of args){
+        for (let arg of args){
             if (arg instanceof Array){
                 this.app.use(arg[0], [arg[1]])
             } else if (arg instanceof Function){
@@ -43,7 +64,7 @@ class Server {
     }
 
     routers(...args){
-        for (arg of args){
+        for (let arg of args){
             if (arg instanceof Array){
                 this.app.use(arg[0], [arg[1]])
             } else if (arg instanceof Function){
@@ -56,7 +77,7 @@ class Server {
     }
 
     staticDirs(...args){
-        for (arg of args){
+        for (let arg of args){
             if (arg instanceof Array){
                 this.app.use(arg[0], express.static([arg[1]]))
             } else if (arg instanceof String){
@@ -73,7 +94,7 @@ class Server {
         const PORT = process.env.PORT || this.configs.PORT || 3000
         const listenfunc = () => console.log(`listening on PORT ${PORT}`)
         const onListen = this.configs.onListen || listenfunc
-        this.app.listen(PORT, onListen)
+        this.app.listen(PORT,this.configs.host, onListen)
     }
 
 }
