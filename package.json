@@ -1,6 +1,6 @@
 {
   "name": "merced-express-oop",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Applying OOP to Express",
   "main": "index.js",
   "scripts": {

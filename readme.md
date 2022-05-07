@@ -64,3 +64,36 @@ Sets up static directories which can be passed as a string representing the dire
 #### server.listen
 
 Turns on the server will either use the PORT env variable or the PORT variable passed into the config object to the constructor. It will run the onListen function if one is defined after starting server. (refer to constructor)
+
+## Extending the Server Class
+
+If you'd like to extend the Server class be aware the class has two properties outside of it's methods.
+
+- `this.app`: the express application object
+- `this.configs`: the object passed to the contructor
+
+With these two properties you should be able to do pretty much anything without needing to override the constructor.
+
+For example
+
+```js
+import Server from "merced-express-oop"
+import mongoose from "mongoose"
+
+class MyServer extends Server {
+    databaseConnection(){
+        mongoose.connect(this.configs.uri)
+        return this
+    }
+}
+
+const server = new MyServer({
+    uri: "mongodb://localhost:12017/mydatabase"
+    })
+
+router.get("/", (req, res) => res.send("Hello World"))
+const router = server.Router()
+
+server.server.cors().basiclogs().databaseConnection().routers(["/", router]).listen()
+
+```
